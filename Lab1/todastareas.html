@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div id="pgTodasTareas" class="page">
+    <div class="header"><a href="#">&lt;Atr&aacute;s</a><h1>Todas las tareas</h1></div>
+    <div class="content">
+        <ul class="lista-tarea">
+            <li class="completada">Tarea 1</li>
+            <li class="completada">Tarea 2</li>
+            <li class="completada">Tarea 3</li>
+            <li class="pendiente">Tarea 4</li>
+            <li class="pendiente">Tarea 5</li>
+            <li class="pendiente">Tarea 6</li>
+            <li class="pendiente">Tarea 7</li>
+            <li class="pendiente">Tarea 8</li>
+        </ul>
+    </div>
+    <div class="footer">
+        <fieldset>
+            <legend>Filtros</legend>
+            <ul class="filtros">
+                <li><input id="chkPendientes" type="checkbox" value="pendientes" checked>Pendientes</li>
+                <li><input id="chkCompletadas" type="checkbox" value="completadas" checked>Completadas</li>
+                <li><input id="txtFecha" type="datetime" placeholder="Fecha: DD/MM/AAAA"></li>
+            </ul>
+        </fieldset>
+    </div>
+</div>
+</body>
+<script>
+    $(function() {
+        $('.content').height($('.content').height() + $('.footer').height());
+        window.scrollTo(0, 1);
+    });
+</script>
+</html>
