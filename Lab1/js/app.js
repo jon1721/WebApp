@@ -91,9 +91,36 @@ function refrescarPrincipal() {
                             tareasDB.push(task)
                         });
 
+                        var ahora = new Date().getTime();
+
+                        tareasDB.forEach(function (task) {
+                            if(task.vencimiento < ahora) {
+                                task.vencida = 1;
+                            } else {
+                                task.vencida = 0;
+                            }
+                        });
+
+                        tareasDB.sort(function(tarea1, tarea2){return tarea2.vencida - tarea1.vencida});
+
+                        var renglon = "";
+
                         while (numTareas < 5 && i < len) {
-                            if (tareasDB[i].estado == 'pendiente') {
+
+                            if ((tareasDB[i].estado == 'pendiente') && (tareasDB[i].vencimiento < ahora)) {
+
+                                renglon = '<li ' +
+                                    'class="vencida"'  +
+                                    'onclick="navSaltar(\'pgEditarTarea\',' +
+                                    tareasDB[i].id + ')">Tarea: ' + tareasDB[i].titulo + '</li>';
+
+                                $('#pgPrincipal .lista-tarea').append(renglon);
+                                numTareas++;
+                            }
+
+                            if ((tareasDB[i].estado == 'pendiente') && (tareasDB[i].vencimiento >= ahora)) {
                                 $('#pgPrincipal .lista-tarea').append('<li ' +
+                                    'class="' +  tareasDB[i].estado + '"' +
                                     'onclick="navSaltar(\'pgEditarTarea\',' +
                                     tareasDB[i].id + ')">Tarea: ' + tareasDB[i].titulo + '</li>');
                                 numTareas++;
@@ -126,6 +153,7 @@ function refrescarPrincipal() {
 function refrescarNuevaTarea() {
     console.log('refrescarNuevaTarea()');
     $('#pgNuevaTarea #txtTitulo').val('');
+    $('#pgNuevaTarea #txtVencimiento').val('');
 }
 
 function refrescarEditarTarea(id) {
@@ -204,15 +232,38 @@ function refrescarTodasTareas() {
                             tareasDB.push(task)
                         });
 
+                        var ahora = new Date().getTime();
+
+                        tareasDB.forEach(function (task) {
+                            if(task.vencimiento < ahora) {
+                                task.vencida = 1;
+                            } else {
+                                task.vencida = 0;
+                            }
+                        });
+
+
+                        tareasDB.sort(function(tarea1, tarea2){return tarea2.vencida - tarea1.vencida});
+
+                        //colorear
+
+                        var renglon = "";
+                        var clase = "";
+
                         for (var i = 0; i < len; i++) {
                             var tarea = tareasDB[i];
                             if (tarea.estado == 'pendiente' && !pendientes) continue;
                             if (tarea.estado == 'completada' && !completadas) continue;
                             if (fecha && tarea.ts < fecha.getTime()) continue;
-                            $('#pgTodasTareas .lista-tarea').append('<li class="' +
-                                tarea.estado  +
+
+                            clase = tarea.estado;
+                            if(tarea.vencida === 1) {clase = "vencida"};
+
+                            renglon = '<li class="' + clase  +
                                 '" onclick="navSaltar(\'pgEditarTarea\',' + tarea.id + ')">Tarea: '
-                                + tarea.titulo + '</li>');
+                                + tarea.titulo + '</li>';
+
+                            $('#pgTodasTareas .lista-tarea').append(renglon);
                         }
                     }
                 };
@@ -236,15 +287,40 @@ $(function() {
 // eventos pgNuevaTarea    
     $('#pgNuevaTarea #btAceptar').click(function() {
         // guardar tarea
-        nuevaTarea($('#txtTitulo').val());
-        navAtras();
+        var vencimiento = $('#txtVencimiento').val();
+        var fechaOK = validarFormatoFecha(vencimiento) && existeFecha(vencimiento);
+
+        if(fechaOK == true)
+        {
+            var fechaf = vencimiento.split("/");
+            var day = fechaf[0];
+            var month = fechaf[1]-1;
+            var year = fechaf[2];
+            var d = new Date(year, month, day);
+            var venc = d.getTime();
+            if(/*new Date().getTime() < venc*/ true){
+                var prior = "";
+                if($('#priorBaja').is(':checked')) { prior = 'baja'; }
+                if($('#priorMedia').is(':checked')) { prior = 'media'; }
+                if($('#priorAlta').is(':checked')) { prior = 'alta'; }
+
+                nuevaTarea($('#txtTitulo').val(), venc, prior);
+                navAtras();
+            }else {
+                alert("La fecha de vencimiento ingresada y/o su formato son incorrectos");
+                $('#txtVencimiento').val("");
+            }
+        } else {
+            alert("La fecha de vencimiento ingresada y/o su formato son incorrectos");
+            $('#txtVencimiento').val("");
+        }
 
     });
     $('#pgNuevaTarea #btCancelar').click(function() {
         navAtras();
     });
 // eventos pgTodasTareas
-    $('#pgTodasTareas #pgTodasTareas input').change(function() {
+    $('#pgTodasTareas input').change(function() {
         refrescarTodasTareas();
         cambiarPagina('pgTodasTareas');
     });
@@ -255,3 +331,25 @@ $(function() {
 
     navSaltar('pgPrincipal');
 });
+
+
+function validarFormatoFecha(campo) {
+    var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+    if ((campo.match(RegExPattern)) && (campo!='')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function existeFecha(fecha){
+    var fechaf = fecha.split("/");
+    var day = fechaf[0];
+    var month = fechaf[1];
+    var year = fechaf[2];
+    var date = new Date(year,month,'0');
+    if((day-0)>(date.getDate()-0)){
+        return false;
+    }
+    return true;
+}

@@ -70,23 +70,47 @@ function dbGetTarea(id) {
                 if (!tarea) {
                     alert('error, tarea con id ' + id + ' no existe');
                     return;
+                } else {
+
+                    //colorear segun vencida
+
+                    var clase = tarea.estado;
+                    var ahora = new Date().getTime();
+                    if(tarea.vencimiento < ahora) {
+                        clase = 'vencida';
+                    }
+
+
+                    // detalles tarea
+                    var html = '<legend>Tarea: ' + tarea.titulo + '</legend>';
+                    var date = new Date(tarea.ts);
+                    var fven = new Date(tarea.vencimiento);
+                    html += '<p class="' +
+                        clase + '">' + tarea.estado +
+                        '</p><p class="' + clase + '">' +
+                        "Inicio: " +
+                        [date.getDate(), date.getMonth() + 1, date.getFullYear()].join("/") + '</p>' +
+
+                    '</p><p class="' + clase + '">' +
+                    "Prioridad: " + tarea.prioridad + '</p>';
+
+                    if(tarea.vencimiento != undefined) {
+                        html +=
+                       '</p><p class="' + clase + '">' + "Vencimiento: " +
+                        [fven.getDate(), fven.getMonth() + 1, fven.getFullYear()].join("/") +'</p>';
+                    }
+
+
+                    $('#pgEditarTarea .content fieldset').html(html);
+                    // botón completar
+                    html = tarea.estado == 'pendiente' ? '<a id="btCompletar"' +
+                    'onclick="completarTarea(' + id + '); navAtras();" class="boton"' +
+                    ' href="#">Completar</a>' : '';
+                    // botón eliminar
+                    html += '<a id="btEliminar" onclick="eliminarTarea(' + id + ')"'
+                        + ' class="boton" href="#">Eliminar</a>';
+                    $('#pgEditarTarea .footer').html(html);
                 }
-                // detalles tarea
-                var html = '<legend>Tarea: ' + tarea.titulo + '</legend>';
-                var date = new Date(tarea.ts);
-                html += '<p class="' + tarea.estado + '">' + tarea.estado + '</p><p class="' +
-                    tarea.estado + '">' +
-                    [date.getDate(), date.getMonth() + 1, date.getFullYear()].join("/") +
-                    '</p>';
-                $('#pgEditarTarea .content fieldset').html(html);
-                // botón completar
-                html = tarea.estado == 'pendiente' ? '<a id="btCompletar"' +
-                'onclick="completarTarea(' + id + '); navAtras();" class="boton"' +
-                ' href="#">Completar</a>' : '';
-                // botón eliminar
-                html += '<a id="btEliminar" onclick="eliminarTarea(' + id + ')"'
-                    + ' class="boton" href="#">Eliminar</a>';
-                $('#pgEditarTarea .footer').html(html);
             }
 
             else {

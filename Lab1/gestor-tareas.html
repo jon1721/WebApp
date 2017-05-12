@@ -37,16 +37,17 @@
         <div class="prioridad">
         <form>
             <label class="radio-inline">
-                <input id="priorBaja" type="radio" name="optradio">Prioridad baja
+                <input id="priorBaja" type="radio" name="rbprioridad" values="baja">Prioridad baja
             </label>
             <label class="radio-inline">
-                <input id="priormedia" type="radio" name="optradio">Prioridad media
+                <input id="priorMedia" type="radio" name="rbprioridad" checked="checked" value="media">Prioridad media
             </label>
             <label class="radio-inline">
-                <input id="prioralta" type="radio" name="optradio">Prioridad alta
+                <input id="priorAlta" type="radio" name="rbprioridad" value="alta">Prioridad alta
             </label>
         </form>
         </div>
+        <input id="txtVencimiento" type="text" placeholder="fecha de vencimiento [DD/MM/AAAA]:" >
     </div>
     <div class="footer">
         <a id="btAceptar" class="boton" href="#">Aceptar</a>

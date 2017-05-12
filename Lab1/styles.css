@@ -78,11 +78,16 @@ body {
     border: solid 2px darkgray;
 }
 .lista-tarea li.pendiente:hover {
-    border: solid 2px darkred;
+    border: solid 2px #a4792b;
 }
 .lista-tarea li.completada:hover {
     border: solid 2px darkgreen;
 }
+
+.lista-tarea li.vencida:hover {
+    border: solid 2px darkred;
+}
+
 a.boton {
     display: block;
     background: -webkit-gradient(linear, left top, left bottom,
@@ -136,17 +141,30 @@ input[type="datetime"] {
     font-size: 1.05em;
 }
 .lista-tarea li.pendiente {
-    background-color: tomato;
-    border: solid 2px tomato;
+    background-color: #ffcf39;
+    border: solid 2px #ffcf39;
 }
 .lista-tarea li.completada {
     background-color: lightgreen;
     border: solid 2px lightgreen;
 }
+
+.lista-tarea li.vencida {
+    background-color: red;
+    border: solid 2px darkred;
+}
+
+p.vencida {
+    padding: 10px;
+    background-color: red;
+    border: solid 2px red;
+}
+
+
 p.pendiente {
     padding: 10px;
-    background-color: tomato;
-    border: solid 2px tomato;
+    background-color: #ffcf39;
+    border: solid 2px #ffcf39;
 }
 p.completada {
     padding: 10px;

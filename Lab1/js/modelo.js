@@ -1,19 +1,20 @@
 var nextId = 1;
 
-function Tarea(titulo) {
+function Tarea(titulo, vencimiento, prioridad) {
     this.id = nextId++;
     this.titulo = titulo;
     this.estado = 'pendiente';
     this.ts = new Date().getTime();
-    this.vencimiento = undefined;
-    this.prioridad = 'media';
+    this.vencimiento = vencimiento;
+    this.vencida = 0;
+    this.prioridad = prioridad;
 }
 
 var tareasDB = [];
 /* crea una nueva tarea en la bd */
-function nuevaTarea(title) {
+function nuevaTarea(title, vencimiento, prioridad) {
     console.log('nuevaTarea(' + title + ')');
-    var tarea = new Tarea(title);
+    var tarea = new Tarea(title, vencimiento, prioridad);
     dbAddTarea(tarea);
     tareasDB.unshift(tarea);
     return tarea;
