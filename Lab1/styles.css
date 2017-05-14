@@ -113,6 +113,17 @@ input[type="text"] {
     padding: 10px;
 }
 
+.permitir {
+    width: 90%;
+    display: block;
+    font-size: 1.05em;
+    margin: 10px auto;
+    padding: 10px;
+    border: solid 1px;
+    border-color: darkgray;
+    text-align: left;
+}
+
 .prioridad {
     width: 90%;
     display: block;
@@ -122,6 +133,7 @@ input[type="text"] {
     border: solid 1px;
     border-color: darkgray;
 }
+
 
 .radio-inline {
     margin-right: 15px;

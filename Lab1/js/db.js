@@ -16,8 +16,9 @@ function dbAbrir(nombre, version) {
 
         request.onupgradeneeded = function(e) {
             db = e.target.result;
-            objectStore = db.createObjectStore('objTareas', {keyPath: 'id'});
-            objectStore.createIndex('id', 'id', {unique: true});
+            objectStore = db.createObjectStore('objTareas', { keyPath: "id" });
+            //objectStore.createIndex('id', 'id', {unique: true});
+
         }
 
         request.onerror = function(event) {
@@ -26,8 +27,10 @@ function dbAbrir(nombre, version) {
 
         request.onsuccess = function(e) {
             db =  e.target.result;
-            var trans = db.transaction('objTareas', 'readwrite');
-            objectStore = trans.objectStore("objTareas");
+            //var trans = db.transaction('objTareas', 'readwrite');
+            //objectStore = trans.objectStore('objTareas', { keyPath: "id" });
+            //objectStore = db.createObjectStore('objTareas', { keyPath: "id" });
+
             refrescarPrincipal();
         }
     }
@@ -46,7 +49,8 @@ function dbAddTarea(nuevaTarea) {
         };
 
         request.onerror = function(event) {
-            console.log("dbAddTarea tx falló: " + event.toString());
+            console.log("dbAddTarea tx falló: " + request.error);
+
         }
     }
 }

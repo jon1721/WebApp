@@ -91,8 +91,11 @@ function refrescarPrincipal() {
                             tareasDB.push(task)
                         });
 
+                        var len = tareasDB.length;
+                        if(len > 0) {
+                            nextId = tareasDB[len - 1].id + 1;
+                        }
                         var ahora = new Date().getTime();
-
                         tareasDB.forEach(function (task) {
                             if(task.vencimiento < ahora) {
                                 task.vencida = 1;
@@ -131,10 +134,7 @@ function refrescarPrincipal() {
                 };
 
             }
-
-
-
-/*
+            /*
             while (numTareas < 5 && i < len) {
                 if (tareasDB[i].estado == 'pendiente') {
                     $('#pgPrincipal .lista-tarea').append('<li ' +
@@ -144,7 +144,7 @@ function refrescarPrincipal() {
                 }
                 i++;
             }
-*/
+            */
         }
     }
 
@@ -154,16 +154,18 @@ function refrescarNuevaTarea() {
     console.log('refrescarNuevaTarea()');
     $('#pgNuevaTarea #txtTitulo').val('');
     $('#pgNuevaTarea #txtVencimiento').val('');
+    $("#priorBaja").prop("checked", false);
+    $("#priorMedia").prop("checked", true);
+    $("#priorAlta").prop("checked", false);
+    $("#chkPermitir").prop("checked", true);
 }
 
 function refrescarEditarTarea(id) {
-    console.log('refrescarEditarTarea(' + id + ')');
+    //console.log('refrescarEditarTarea(' + id + ')');
     if (!id) return;
 
-    console.log("refrescarEditarTarea id: " + id);
+    //console.log("refrescarEditarTarea id: " + id);
     dbGetTarea(id[0]);
-
-
 
 /*
     var tarea = buscarTarea(id);
@@ -257,7 +259,9 @@ function refrescarTodasTareas() {
                             if (fecha && tarea.ts < fecha.getTime()) continue;
 
                             clase = tarea.estado;
-                            if(tarea.vencida === 1) {clase = "vencida"};
+                            if(clase !== "completada") {
+                                if(tarea.vencida === 1) {clase = "vencida"};
+                            }
 
                             renglon = '<li class="' + clase  +
                                 '" onclick="navSaltar(\'pgEditarTarea\',' + tarea.id + ')">Tarea: '
@@ -290,6 +294,11 @@ $(function() {
         var vencimiento = $('#txtVencimiento').val();
         var fechaOK = validarFormatoFecha(vencimiento) && existeFecha(vencimiento);
 
+        if($('#txtTitulo').val() === ""){
+            alert("El título de la tarea es un campo obligatorio");
+            return;
+        }
+
         if(fechaOK == true)
         {
             var fechaf = vencimiento.split("/");
@@ -298,7 +307,12 @@ $(function() {
             var year = fechaf[2];
             var d = new Date(year, month, day);
             var venc = d.getTime();
-            if(/*new Date().getTime() < venc*/ true){
+
+            var permitir = new Date().getTime() < venc;
+
+            if($('#chkPermitir').is(':checked') === false) { permitir = true; }
+
+            if(permitir){
                 var prior = "";
                 if($('#priorBaja').is(':checked')) { prior = 'baja'; }
                 if($('#priorMedia').is(':checked')) { prior = 'media'; }
@@ -307,12 +321,14 @@ $(function() {
                 nuevaTarea($('#txtTitulo').val(), venc, prior);
                 navAtras();
             }else {
-                alert("La fecha de vencimiento ingresada y/o su formato son incorrectos");
+                alert("La fecha de vencimiento no puede ser inferior a la actual");
                 $('#txtVencimiento').val("");
+                return;
             }
         } else {
             alert("La fecha de vencimiento ingresada y/o su formato son incorrectos");
             $('#txtVencimiento').val("");
+            return;
         }
 
     });
