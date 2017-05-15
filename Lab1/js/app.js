@@ -200,6 +200,11 @@ function refrescarTodasTareas() {
     // filtrar
     var pendientes = $('#pgTodasTareas #chkPendientes').is(":checked");
     var completadas = $('#pgTodasTareas #chkCompletadas').is(":checked");
+
+    var baja = $('#pgTodasTareas #chkBaja').is(":checked");
+    var media = $('#pgTodasTareas #chkMedia').is(":checked");
+    var alta = $('#pgTodasTareas #chkAlta').is(":checked");
+
     var fecha = $('#pgTodasTareas #txtFecha').val();
     try {
         fecha = fecha && fecha.split('/');
@@ -256,6 +261,12 @@ function refrescarTodasTareas() {
                             var tarea = tareasDB[i];
                             if (tarea.estado == 'pendiente' && !pendientes) continue;
                             if (tarea.estado == 'completada' && !completadas) continue;
+
+                            if (tarea.prioridad == 'baja' && !baja) continue;
+                            if (tarea.prioridad == 'media' && !media) continue;
+                            if (tarea.prioridad == 'alta' && !alta) continue;
+
+
                             if (fecha && tarea.ts < fecha.getTime()) continue;
 
                             clase = tarea.estado;
